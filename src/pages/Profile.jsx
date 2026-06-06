@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import Icon from '../components/Icon';
 import { Badge, Button } from '../components/ui';
 import { formatCOP, formatDate, orderCode } from '../lib/format';
