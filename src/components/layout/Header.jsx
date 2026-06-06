@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Logo from '../Logo';
 import Icon from '../Icon';
@@ -17,7 +17,6 @@ export default function Header() {
   const { cartCount, user } = useStore();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -25,8 +24,6 @@ export default function Header() {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  useEffect(() => setOpen(false), [location.pathname]);
 
   const linkClass = ({ isActive }) =>
     `relative font-heading text-sm font-600 uppercase tracking-wider transition-colors hover:text-fire ${
@@ -102,6 +99,7 @@ export default function Header() {
                   key={item.to}
                   to={item.to}
                   end={item.end}
+                  onClick={() => setOpen(false)}
                   className={({ isActive }) =>
                     `rounded-md px-4 py-3 font-heading text-base font-600 uppercase tracking-wider transition-colors ${
                       isActive ? 'bg-fire/10 text-fire' : 'text-chrome hover:bg-white/5'

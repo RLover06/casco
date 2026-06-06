@@ -29,28 +29,23 @@ function cartReducer(state, action) {
       return state.filter((i) => i.key !== action.key);
     case 'CLEAR':
       return [];
-    case 'HYDRATE':
-      return action.payload;
     default:
       return state;
   }
 }
 
-export function StoreProvider({ children }) {
-  const [cart, dispatch] = useReducer(cartReducer, []);
-  const [user, setUser] = useState(null);
-  const [orders, setOrders] = useState([]);
+function initialUser() {
+  const sessionEmail = loadJSON(SESSION_KEY, null);
+  if (!sessionEmail) return null;
+  const users = loadJSON(USERS_KEY, {});
+  return users[sessionEmail] ? stripPassword(users[sessionEmail]) : null;
+}
 
-  // Hydrate from storage once on mount.
-  useEffect(() => {
-    dispatch({ type: 'HYDRATE', payload: loadJSON(CART_KEY, []) });
-    const sessionEmail = loadJSON(SESSION_KEY, null);
-    if (sessionEmail) {
-      const users = loadJSON(USERS_KEY, {});
-      if (users[sessionEmail]) setUser(stripPassword(users[sessionEmail]));
-    }
-    setOrders(loadJSON(ORDERS_KEY, []));
-  }, []);
+export function StoreProvider({ children }) {
+  // Lazy initializers hydrate synchronously from storage (pure client app).
+  const [cart, dispatch] = useReducer(cartReducer, null, () => loadJSON(CART_KEY, []));
+  const [user, setUser] = useState(initialUser);
+  const [orders, setOrders] = useState(() => loadJSON(ORDERS_KEY, []));
 
   // Persist cart whenever it changes.
   useEffect(() => {

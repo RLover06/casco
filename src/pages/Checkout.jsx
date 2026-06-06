@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ProductImage from '../components/ProductImage';
@@ -15,29 +15,23 @@ const DEPARTMENTS = [
 
 const empty = { name: '', phone: '', email: '', department: 'Córdoba', city: 'Montería', address: '', notes: '' };
 
+function prefill(user) {
+  if (!user) return empty;
+  const addr = user.addresses?.[0];
+  return {
+    ...empty,
+    name: user.name || '',
+    email: user.email || '',
+    phone: user.phone || '',
+    ...(addr ? { department: addr.department, city: addr.city, address: addr.address } : {}),
+  };
+}
+
 export default function Checkout() {
   const { cartDetailed, cartSubtotal, placeOrder, user } = useStore();
-  const [form, setForm] = useState(empty);
+  const [form, setForm] = useState(() => prefill(user));
   const [errors, setErrors] = useState({});
   const [order, setOrder] = useState(null);
-
-  useEffect(() => {
-    if (user) {
-      setForm((f) => ({
-        ...f,
-        name: f.name || user.name || '',
-        email: f.email || user.email || '',
-        phone: f.phone || user.phone || '',
-        ...(user.addresses?.[0]
-          ? {
-              department: user.addresses[0].department,
-              city: user.addresses[0].city,
-              address: user.addresses[0].address,
-            }
-          : {}),
-      }));
-    }
-  }, [user]);
 
   const isMonteria = form.city.trim().toLowerCase() === 'montería' || form.city.trim().toLowerCase() === 'monteria';
   const shipping = isMonteria ? 0 : cartSubtotal > 300000 ? 0 : 18000;
