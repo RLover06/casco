@@ -7,8 +7,8 @@ export const SITE = {
   tagline: 'El punto de referencia motociclista de Montería',
   city: 'Montería, Córdoba',
   // Colombian number in international format for the wa.me link (no + or spaces).
-  whatsappNumber: '573001234567',
-  phoneDisplay: '+57 300 123 4567',
+  whatsappNumber: '57312 6704505',
+  phoneDisplay: '+57 312 6704505',
   email: 'pedidos@clinicadelcasco.com',
   address: 'Cra. 6 # 30-45, Centro, Montería, Córdoba',
   hours: [
